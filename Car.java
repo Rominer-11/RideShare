@@ -12,6 +12,7 @@ public class Car
 	private int initialStation;
 	private int currentStation;
 	private int destination;
+	private boolean readyToMove;
 
 	public Car(int initialStation, int destination)
 	{
@@ -19,8 +20,17 @@ public class Car
 		this.initialStation = initialStation;
 		this.currentStation = initialStation;
 		this.destination = destination;
+		this.readyToMove = true;
 	}
 
+	public void setReadyToMove(boolean b)
+	{
+		readyToMove = b;
+	}
+	public boolean getReadyToMove()
+	{
+		return readyToMove;
+	}
 	public void addPerson(Person person)
 	{
 		if (persons.size() < 4)
