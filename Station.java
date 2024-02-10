@@ -37,7 +37,7 @@ public class Station
 					}
 				}
 				// Passenger boards car
-				if (carIndex != -1)
+				if (carIndex != -1 && cars.get(carIndex).getPersons().size() != 3)
 				{
 					cars.get(carIndex).addPerson(person);
 					persons.remove(n);
@@ -56,11 +56,36 @@ public class Station
 					}
 				}
 				// Passenger boards car
-				if (carIndex != -1)
+				if (carIndex != -1 && cars.get(carIndex).getPersons().size() != 3)
 				{
 					cars.get(carIndex).addPerson(person);
 					persons.remove(n);
 				}
+			}
+		}
+	}
+	public void unloadPassengers()
+	{
+		//unload passengers at destination
+		for (int i = 0; i < cars.size(); i++)
+		{
+			Car car = cars.get(i);
+			for (int n = car.getPersons().size() - 1; n > -1; n--)
+			{
+				if (car.getPersons().get(n).getDestination() == getStationNumber())
+				{
+					car.removePerson(n);
+				}
+			}
+		}
+	}
+	public void checkCars()
+	{
+		for (int i = cars.size() - 1; i > -1; i--)
+		{
+			if (cars.get(i).getDestination() == getStationNumber())
+			{
+				despawnCar(i);
 			}
 		}
 	}
@@ -89,6 +114,16 @@ public class Station
 	{
 		cars.add(car);
 	}	
+	public void despawnCar(int index)
+	{
+		Car car = cars.get(index);
+		for (int i = car.getPersons().size() - 1; i > -1; i--)
+		{
+			addPerson(car.getPersons().get(i));
+			car.removePerson(i);
+		}
+		cars.remove(index);
+	}
 	public void removeCar(int index)
 	{
 		cars.remove(index);
