@@ -100,7 +100,7 @@ public class RideShareRunner
 		for (int i = 0; i < stations.length; i++)
 		{
 			stations[i] = new Station(i);
-/*
+
 			int multiplier = (int) (Math.random() * 2);
 			for (int n = 0; n < multiplier; n++)
 			{
@@ -111,9 +111,9 @@ public class RideShareRunner
 			{
 				stations[i].spawnCar((int) (Math.random() * 32));
 			}
-*/
-		}
 
+		}
+/*
 		stations[0].spawnPerson(2);
 		stations[1].spawnPerson(2);
 		stations[1].spawnPerson(3);
@@ -122,7 +122,7 @@ public class RideShareRunner
 		stations[0].spawnCar(4);
 		stations[2].spawnCar(4);
 		stations[4].spawnCar(1);
-
+*/
 		while (true)
 		{
 			draw(stations);
