@@ -41,9 +41,9 @@ public class RideShareRunner
 					}
 					System.out.print(person.getDestination());
 				}
-				for (int i = 0; i < (3 - (car.getPersons().size() - 1)); i++)
+				for (int i = 0; i < (3 - (car.getPersons().size())); i++)
 				{
-					System.out.print("__");
+					System.out.print("___");
 				}
 				System.out.print("]");
 				System.out.print("(" + car.getDestination() + ")");
@@ -100,16 +100,18 @@ public class RideShareRunner
 		for (int i = 0; i < stations.length; i++)
 		{
 			stations[i] = new Station(i);
-			int multiplier = (int) (Math.random() * 6);
+
+			int multiplier = (int) (Math.random() * 2);
 			for (int n = 0; n < multiplier; n++)
 			{
 				stations[i].spawnPerson((int) (Math.random() * 32));
 			}
-			multiplier = (int) (Math.random() * 6);
+			multiplier = (int) (Math.random() * 2);
 			for (int n = 0; n < multiplier; n++)
 			{
 				stations[i].spawnCar((int) (Math.random() * 32));
 			}
+
 		}
 /*
 		stations[0].spawnPerson(30);
