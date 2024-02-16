@@ -15,6 +15,7 @@ public class RideShareRunner
 	{
 		System.out.print("\033[H\033[2J");  
 		System.out.flush();  
+		System.out.println("RideShare -- Made by August Cho for APCS");
 		for (Station station : stations)
 		{
 			for (int i = 0; i < String.valueOf(stations.length).length() - String.valueOf(station.getStationNumber()).length() + 1; i++)
@@ -26,7 +27,7 @@ public class RideShareRunner
 			{
 				for (int i = 0; i < String.valueOf(stations.length).length() - String.valueOf(person.getDestination()).length() + 1; i++)
 				{
-					System.out.print("-");
+					System.out.print("_");
 				}
 				System.out.print(person.getDestination());
 			}
@@ -37,7 +38,7 @@ public class RideShareRunner
 				{
 					for (int i = 0; i < String.valueOf(stations.length).length() - String.valueOf(person.getDestination()).length() + 1; i++)
 					{
-						System.out.print("-");
+						System.out.print("_");
 					}
 					System.out.print(person.getDestination());
 				}
@@ -97,48 +98,94 @@ public class RideShareRunner
 		Scanner in = new Scanner(System.in);
 		
 		Station[] stations = new Station[32];
+		System.out.println("Welcome to RideShare. If you would like to randomly populate each station, type \"random\".");
+		String random = in.next();
 		for (int i = 0; i < stations.length; i++)
 		{
 			stations[i] = new Station(i);
-
-			int multiplier = (int) (Math.random() * 2);
-			for (int n = 0; n < multiplier; n++)
+			if (random.equalsIgnoreCase("random"))
 			{
-				stations[i].spawnPerson((int) (Math.random() * 32));
+				int multiplier = (int) (Math.random() * 3);
+				for (int n = 0; n < multiplier; n++)
+				{
+					int dest = (int) (Math.random() * 32);
+					while (dest == i)
+					{
+						//makes sure no people spawn at their destination
+						dest = (int) (Math.random() * 32);
+					}
+					stations[i].spawnPerson(dest);
+				}
+				multiplier = (int) (Math.random() * 3);
+				for (int n = 0; n < multiplier; n++)
+				{
+					stations[i].spawnCar((int) (Math.random() * 32));
+				}
 			}
-			multiplier = (int) (Math.random() * 2);
-			for (int n = 0; n < multiplier; n++)
-			{
-				stations[i].spawnCar((int) (Math.random() * 32));
-			}
-
 		}
-/*
-		stations[0].spawnPerson(2);
-		stations[1].spawnPerson(2);
-		stations[1].spawnPerson(3);
-		stations[1].spawnPerson(4);
-		stations[3].spawnPerson(0);
-		stations[0].spawnCar(4);
-		stations[2].spawnCar(4);
-		stations[4].spawnCar(1);
-*/
+		
+		int cycle = 1;
+		in.nextLine();
+
 		while (true)
 		{
-			draw(stations);
-			System.out.println("Miles driven: " + miles);
-			
-			for (Station station : stations)
+			String input = "placeholder";
+			while (!input.equals(""))
 			{
-				station.unloadPassengers();
-				station.checkCars();
-				station.boardPassengers();
+				draw(stations);
+				System.out.println("Miles driven: " + miles);
+				
+				System.out.println("Press <ENTER> to cycle a round. <CTRL> + <C> will break out of the program. To spawn a car, type C. To spawn a person, type P.");
+				if (cycle == 1)
+				{
+					System.out.println("On the next round, passengers will be loaded and unloaded.");
+				}
+				if (cycle == 2)
+				{
+					System.out.println("On the next round, cars will move.");
+				}
+				System.out.println("> ");
+				input = in.nextLine();
+				if (input.equalsIgnoreCase("c"))
+				{
+					System.out.println("Location: ");
+					int loc = in.nextInt();
+					System.out.println("Destination: ");
+					int dest = in.nextInt();
+					stations[loc].spawnCar(dest);
+					input = "this value is here to repeat command line";
+					in.nextLine();
+				}
+				else if (input.equalsIgnoreCase("p"))
+				{
+					System.out.println("Location: ");
+					int loc = in.nextInt();
+					System.out.println("Destination: ");
+					int dest = in.nextInt();
+					stations[loc].spawnPerson(dest);
+					input = "this value is here to repeat command line";
+					in.nextLine();
+				}
 			}
-			in.nextLine();
-			draw(stations);
-			System.out.println("Miles driven: " + miles);
-			moveCars(stations);	
-			in.nextLine();
+
+			if (cycle == 1)
+			{
+				//load and unload
+				for (Station station : stations)
+				{
+					station.unloadPassengers();
+					station.checkCars();
+					station.boardPassengers();
+				}
+				cycle = 2;
+			}
+			else if (cycle == 2)
+			{
+				//move the cars
+				moveCars(stations);
+				cycle = 1;
+			}
+			System.out.println("Cycling next round...");
 		}
 	}
 }
