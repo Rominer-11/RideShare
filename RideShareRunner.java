@@ -1,7 +1,7 @@
 /**
  * RSGui.java GUI for RideShare project
  * @author August Cho
- * @version 2024-02-06
+ * @version 2024-02-16
  */
 
 import java.util.Scanner;
@@ -10,12 +10,14 @@ import java.util.ArrayList;
 public class RideShareRunner
 {
 	private static int miles;
+	private static int passengerMiles;
 
 	public static void draw(Station[] stations)
 	{
 		System.out.print("\033[H\033[2J");  
 		System.out.flush();  
 		System.out.println("RideShare -- Made by August Cho for APCS");
+		System.out.println("----------------------------------------");
 		for (Station station : stations)
 		{
 			for (int i = 0; i < String.valueOf(stations.length).length() - String.valueOf(station.getStationNumber()).length() + 1; i++)
@@ -51,6 +53,7 @@ public class RideShareRunner
 			}
 			System.out.print("\n");
 		}
+		System.out.println("----------------------------------------");
 	}
 	public static void moveCars(Station[] stations)
 	{
@@ -70,6 +73,7 @@ public class RideShareRunner
 						stations[i + 1].addCar(car);
 						station.removeCar(n);
 						miles++;
+						passengerMiles += car.getPersons().size();
 					}
 					else if (car.getDestination() < station.getStationNumber())
 					{
@@ -77,6 +81,7 @@ public class RideShareRunner
 						stations[i - 1].addCar(car);
 						station.removeCar(n);
 						miles++;
+						passengerMiles += car.getPersons().size();
 					}
 				}
 			}
@@ -98,8 +103,8 @@ public class RideShareRunner
 		Scanner in = new Scanner(System.in);
 		
 		Station[] stations = new Station[32];
-		System.out.println("Welcome to RideShare. If you would like to randomly populate each station, type \"random\".");
-		String random = in.next();
+		System.out.println("Welcome to RideShare. If you would like to randomly populate each station, type \"random\". To continue with an empty road, hit <ENTER>.");
+		String random = in.nextLine();
 		for (int i = 0; i < stations.length; i++)
 		{
 			stations[i] = new Station(i);
@@ -125,7 +130,6 @@ public class RideShareRunner
 		}
 		
 		int cycle = 1;
-		in.nextLine();
 
 		while (true)
 		{
@@ -134,7 +138,7 @@ public class RideShareRunner
 			{
 				draw(stations);
 				System.out.println("Miles driven: " + miles);
-				
+				System.out.println("Passenger miles: " + passengerMiles);
 				System.out.println("Press <ENTER> to cycle a round. <CTRL> + <C> will break out of the program. To spawn a car, type C. To spawn a person, type P.");
 				if (cycle == 1)
 				{
@@ -145,12 +149,14 @@ public class RideShareRunner
 					System.out.println("On the next round, cars will move.");
 				}
 				System.out.println("> ");
+
 				input = in.nextLine();
+
 				if (input.equalsIgnoreCase("c"))
 				{
-					System.out.println("Location: ");
+					System.out.println("Location (station number): ");
 					int loc = in.nextInt();
-					System.out.println("Destination: ");
+					System.out.println("Destination (station number): ");
 					int dest = in.nextInt();
 					stations[loc].spawnCar(dest);
 					input = "this value is here to repeat command line";
@@ -158,9 +164,9 @@ public class RideShareRunner
 				}
 				else if (input.equalsIgnoreCase("p"))
 				{
-					System.out.println("Location: ");
+					System.out.println("Location (station number): ");
 					int loc = in.nextInt();
-					System.out.println("Destination: ");
+					System.out.println("Destination (station number): ");
 					int dest = in.nextInt();
 					stations[loc].spawnPerson(dest);
 					input = "this value is here to repeat command line";
